@@ -15,13 +15,12 @@ document.addEventListener('DOMContentLoaded', function() {
               "Cajones con cierre suave para una apertura controlada",
               "Ideal para dormitorios, oficinas o espacios de guardado mixto"
             ],
-            materials: ["Melamina blanca", "MDF lacado"],
             dimensions: {
               width: "120 cm",
               height: "85 cm",
               depth: "45 cm"
             },
-            colorsAvailable: ["Blanco mate", "beige", "Negro"],
+            colorsAvailable: ["Blanco", "gris", "Blanco-natural", "Negro"],
             images: [
               "image/comodas/Cómoda Duo Blanco.jpg",
               "image/comodas/Cómoda Duo Gris.jpg",
@@ -250,18 +249,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Close modal
-    modalClose.addEventListener('click', function() {
-      productDetail.classList.remove('active');
-      document.body.style.overflow = 'auto'; // Enable scrolling
-    });
+    if (modalClose) {
+        modalClose.addEventListener('click', function() {
+          productDetail.classList.remove('active');
+          document.body.style.overflow = 'auto'; // Enable scrolling
+        });
+    }
     
     // Close modal when clicking outside
-    productDetail.addEventListener('click', function(event) {
-      if (event.target === productDetail) {
-        productDetail.classList.remove('active');
-        document.body.style.overflow = 'auto'; // Enable scrolling
-      }
-    });
+    if (productDetail) {
+        productDetail.addEventListener('click', function(event) {
+          if (event.target === productDetail) {
+            productDetail.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Enable scrolling
+          }
+        });
+    }
     
     // Responsive menu toggle (for mobile)
     const createMobileMenu = () => {

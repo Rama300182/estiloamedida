@@ -22,84 +22,21 @@
 
   <section class="products">
     <div class="container">
-      <div class="products-grid">
-        <div class="product-card" data-category="modernos">
-          <div class="product-image">
-            <img src="image/comodas/Cómoda Duo Blanco.jpg" alt="Cómoda Minimalista">
-            <div class="product-overlay">
-              <button class="btn-view">Ver detalles</button>
-            </div>
-          </div>
-          <div class="product-info">
-            <h3>Cómoda Dúo</h3>
-            <p>Una pieza contemporánea que destaca por su diseño simétrico y detalles metálicos.</p>
-          </div>
-        </div>
+      <!-- Loading spinner -->
+      <div id="products-loading" class="loading-spinner" style="text-align: center; padding: 40px;">
+        <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #007bff; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+        <p style="margin-top: 15px; color: #666;">Cargando productos...</p>
+      </div>
+      
+      <!-- Error message -->
+      <div id="products-error" class="error-message" style="display: none; text-align: center; padding: 40px;">
+        <p style="color: #dc3545;">Error al cargar los productos. Por favor, recarga la página.</p>
+        <button onclick="cargarProductosComodas()" style="margin-top: 15px; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Reintentar</button>
+      </div>
 
-        <div class="product-card" data-category="nordicos">
-          <div class="product-image">
-            <img src="image/comodas/Cómoda Modena Blanco.png" alt="Cómoda Nórdica">
-            <div class="product-overlay">
-              <button class="btn-view">Ver detalles</button>
-            </div>
-          </div>
-          <div class="product-info">
-            <h3>Cómoda Modena</h3>
-            <p>Su estructura limpia y proporciones equilibradas la convierten en un clásico actual.</p>
-          </div>
-        </div>
-
-        <div class="product-card" data-category="clasicos">
-          <div class="product-image">
-            <img src="image/comodas/Cómoda Siena Blanco.png" alt="Cómoda Siena">
-            <div class="product-overlay">
-              <button class="btn-view">Ver detalles</button>
-            </div>
-          </div>
-          <div class="product-info">
-            <h3>Cómoda Siena</h3>
-            <p>Combinación de diseño tradicional y líneas modernas para un ambiente distinguido</p>
-          </div>
-        </div>
-
-        <div class="product-card" data-category="modernos">
-          <div class="product-image">
-            <img src="image/comodas/Cómoda Luma Blanco.png" alt="Cómoda Luma">
-            <div class="product-overlay">
-              <button class="btn-view">Ver detalles</button>
-            </div>
-          </div>
-          <div class="product-info">
-            <h3>Cómoda Luma</h3>
-            <p>Una propuesta versátil que resalta por su diseño sobrio y moderno.</p>
-          </div>
-        </div>
-
-        <div class="product-card" data-category="nordicos">
-          <div class="product-image">
-            <img src="image/comodas/Cómoda Alba Blanco.png" alt="Cómoda Escandinava">
-            <div class="product-overlay">
-              <button class="btn-view">Ver detalles</button>
-            </div>
-          </div>
-          <div class="product-info">
-            <h3>Cómoda Alba</h3>
-            <p>Diseño limpio y equilibrado que aporta calidez a cualquier ambiente.</p>
-          </div>
-        </div>
-
-        <div class="product-card" data-category="clasicos">
-          <div class="product-image">
-            <img src="image/comodas/Cómoda Nova Blanco.png" alt="Cómoda Elegante">
-            <div class="product-overlay">
-              <button class="btn-view">Ver detalles</button>
-            </div>
-          </div>
-          <div class="product-info">
-            <h3>Cómoda Nova</h3>
-            <p>Una pieza versátil con líneas limpias, ideal para ambientes contemporáneos.</p>
-          </div>
-        </div>
+      <!-- Products grid - Se llenará dinámicamente -->
+      <div class="products-grid" id="products-grid" style="display: none;">
+        <!-- Los productos se cargarán aquí desde Supabase -->
       </div>
     </div>
   </section>
@@ -155,3 +92,80 @@
 
  <!-- Incluir footer desde footer.html -->
 <?php include 'footer.html'; ?>
+
+<!-- Script para cargar productos de cómodas dinámicamente -->
+<script>
+// Animación de loading
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`;
+document.head.appendChild(style);
+
+// Función para cargar productos de cómodas
+async function cargarProductosComodas() {
+  const loadingEl = document.getElementById('products-loading');
+  const errorEl = document.getElementById('products-error');
+  const gridEl = document.getElementById('products-grid');
+
+  // Mostrar loading, ocultar error y grid
+  loadingEl.style.display = 'block';
+  errorEl.style.display = 'none';
+  gridEl.style.display = 'none';
+
+  try {
+    // Obtener productos de la categoría cómodas
+    const resultado = await productsService.getProductosByCategoria('comodas');
+    
+    if (resultado.success && resultado.data.length > 0) {
+      // Generar HTML para todos los productos
+      const productosHTML = resultado.data.map(producto => 
+        productsService.generarTarjetaProducto(producto)
+      ).join('');
+      
+      gridEl.innerHTML = productosHTML;
+      
+      // Ocultar loading, mostrar grid
+      loadingEl.style.display = 'none';
+      gridEl.style.display = 'grid';
+      
+      console.log(`✅ Cargados ${resultado.data.length} productos de cómodas`);
+      
+      // Reinicializar filtros si existe la función
+      if (typeof initializeFilters === 'function') {
+        initializeFilters();
+      }
+      
+    } else {
+      throw new Error('No se encontraron productos de cómodas');
+    }
+    
+  } catch (error) {
+    console.error('Error al cargar productos:', error);
+    
+    // Mostrar error, ocultar loading
+    loadingEl.style.display = 'none';
+    errorEl.style.display = 'block';
+  }
+}
+
+// Cargar productos cuando la página esté lista
+document.addEventListener('DOMContentLoaded', () => {
+  // Esperar a que los servicios estén listos
+  setTimeout(() => {
+    if (typeof productsService !== 'undefined' && productsService) {
+      cargarProductosComodas();
+    } else {
+      console.error('ProductsService no está disponible');
+      document.getElementById('products-loading').style.display = 'none';
+      document.getElementById('products-error').style.display = 'block';
+    }
+  }, 1000); // Aumentar tiempo de espera
+});
+</script>
+
+</body>
+</html>

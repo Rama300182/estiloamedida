@@ -7,9 +7,22 @@
   <title>Estilo a Medida | Tu hogar, tu estilo</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/comodas.css">
+  <link rel="stylesheet" href="css/detalle-producto.css">
   <link rel="icon" type="image/png" href="image/logo.png">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Supabase JS (usando jsdelivr por ser más confiable que unpkg) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+  
+  <!-- Scripts de la aplicación en orden -->
+  <script src="config/supabase.js" defer></script>
+  <script src="js/debug.js" defer></script>
+  <script src="js/products.service.js" defer></script>
+  <script src="js/leads.service.js" defer></script>
+</head>
+  <!-- Debug puede mantener defer ya que es para diagnóstico -->
+  <script src="js/debug.js" defer></script>
 </head>
 <body>
   <header>

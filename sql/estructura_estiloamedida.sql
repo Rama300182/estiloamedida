@@ -79,7 +79,7 @@ create table if not exists public.testimonios (
   creado_at timestamptz default now()
 );
 
--- 8) Leads (consultas desde el formulario de contacto)
+-- 8) Leads (consultas desde el formulario de contacto) - TABLA EXISTENTE
 create table if not exists public.leads (
   id bigserial primary key,
   nombre text not null,
@@ -91,7 +91,35 @@ create table if not exists public.leads (
   creado_at timestamptz default now()
 );
 
--- 9) Información general del sitio (footer/datos de contacto)
+-- 9) Consultas mejoradas (nueva versión más completa)
+create table if not exists public.consultas (
+  id bigserial primary key,
+  nombre text not null,
+  email text not null,
+  telefono text,
+  mensaje text,
+  producto_interes text, -- 'cocinas', 'comodas', 'placards', 'otros'
+  presupuesto_estimado text, -- 'hasta_50000', '50000_100000', etc.
+  estado text default 'nuevo', -- 'nuevo', 'contactado', 'presupuestado', 'cerrado'
+  origen text default 'web',
+  notas text, -- para uso interno del equipo
+  creado_at timestamptz default now(),
+  actualizado_at timestamptz default now()
+);
+
+-- 10) Newsletter (suscriptores)
+create table if not exists public.newsletter (
+  id bigserial primary key,
+  email text unique not null,
+  nombre text,
+  activo boolean default true,
+  origen text default 'web',
+  fecha_suscripcion timestamptz default now(),
+  fecha_baja timestamptz
+);
+
+-- 11) Información general del sitio (footer/datos de contacto)
+-- 11) Información general del sitio (footer/datos de contacto)
 create table if not exists public.site_info (
   id smallint primary key default 1,
   marca text,
@@ -116,6 +144,8 @@ alter table public.proyectos           enable row level security;
 alter table public.proyecto_fotos      enable row level security;
 alter table public.testimonios         enable row level security;
 alter table public.leads               enable row level security;
+alter table public.consultas           enable row level security;  -- NUEVA
+alter table public.newsletter          enable row level security;  -- NUEVA
 alter table public.site_info           enable row level security;
 
 -- Lectura pública
@@ -143,6 +173,28 @@ on public.testimonios for select to anon using (true);
 create policy if not exists public_select_site_info
 on public.site_info for select to anon using (true);
 
--- Insert público solo en leads
+-- Insert público solo en leads, consultas y newsletter
 create policy if not exists public_insert_leads
 on public.leads for insert to anon with check (true);
+
+-- Permitir insertar consultas desde el formulario web
+create policy if not exists public_insert_consultas
+on public.consultas for insert to anon with check (true);
+
+-- Permitir insertar suscripciones al newsletter
+create policy if not exists public_insert_newsletter
+on public.newsletter for insert to anon with check (true);
+
+-- Función para actualizar timestamp automáticamente
+create or replace function update_updated_at_column()
+returns trigger as $$
+begin
+    new.actualizado_at = now();
+    return new;
+end;
+$$ language plpgsql;
+
+-- Trigger para actualizar automáticamente el campo actualizado_at en consultas
+create trigger update_consultas_updated_at 
+    before update on public.consultas 
+    for each row execute function update_updated_at_column();
