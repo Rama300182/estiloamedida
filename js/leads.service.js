@@ -1,20 +1,11 @@
-/**
- * Servicio para manejar leads/consultas desde Supabase
- * Permite enviar consultas de clientes y suscripciones a newsletter
- */
-
+// Servicio para manejar leads/consultas desde Supabase
 class LeadsService {
     constructor() {
         this.supabase = getSupabaseClient();
     }
 
-    /**
-     * Enviar consulta de cliente
-     * @param {object} consultaData - Datos de la consulta
-     */
     async enviarConsulta(consultaData) {
         try {
-            // Validar datos requeridos
             if (!consultaData.nombre || !consultaData.email) {
                 return {
                     success: false,
@@ -22,7 +13,6 @@ class LeadsService {
                 };
             }
 
-            // Preparar datos para insertar
             const consulta = {
                 nombre: consultaData.nombre.trim(),
                 email: consultaData.email.trim().toLowerCase(),
@@ -48,11 +38,11 @@ class LeadsService {
                 };
             }
 
-            console.log('✅ Consulta enviada correctamente:', data);
+            console.log('Consulta enviada correctamente:', data);
             return {
                 success: true,
                 data,
-                message: '¡Gracias por tu consulta! Te contactaremos pronto.'
+                message: 'Gracias por tu consulta! Te contactaremos pronto.'
             };
 
         } catch (err) {
@@ -64,14 +54,20 @@ class LeadsService {
         }
     }
 
-    /**
-     * Suscribirse al newsletter
-     * @param {string} email - Email para suscripción
-     * @param {string} nombre - Nombre opcional
-     */
-    async suscribirNewsletter(email, nombre = null) {
+    async suscribirNewsletter(email, nombre = null, apellido = null) {
+        console.log('Iniciando suscripción al newsletter...', { email, nombre, apellido });
+        
         try {
+            if (!this.supabase) {
+                console.error('Cliente Supabase no inicializado');
+                return {
+                    success: false,
+                    error: 'Error de conexión con el servidor'
+                };
+            }
+
             if (!email) {
+                console.warn('Email no proporcionado');
                 return {
                     success: false,
                     error: 'El email es requerido'
@@ -81,72 +77,67 @@ class LeadsService {
             const suscripcion = {
                 email: email.trim().toLowerCase(),
                 nombre: nombre?.trim() || null,
+                apellido: apellido?.trim() || null,
                 activo: true,
-                origen: 'web'
+                fecha_suscripcion: new Date().toISOString()
             };
+
+            console.log('Datos a insertar:', suscripcion);
 
             const { data, error } = await this.supabase
                 .from('newsletter')
                 .insert([suscripcion])
-                .select()
-                .single();
+                .select();
 
             if (error) {
-                // Si el error es por email duplicado
+                console.error('Error de Supabase:', error);
+                
                 if (error.code === '23505') {
                     return {
                         success: false,
-                        error: 'Este email ya está suscrito al newsletter'
+                        error: 'Ya estás suscrito! Gracias por tu interés en nuestras novedades.'
                     };
                 }
 
-                console.error('Error al suscribir al newsletter:', error);
+                if (error.code === '42501' || error.status === 401) {
+                    return {
+                        success: false,
+                        error: 'Error de autenticación con el servidor'
+                    };
+                }
+
                 return {
                     success: false,
-                    error: 'Error al procesar la suscripción'
+                    error: 'Error al procesar la suscripción: ' + error.message
                 };
             }
 
+            console.log('Suscripción exitosa:', data);
             return {
                 success: true,
                 data,
-                message: '¡Te has suscrito exitosamente al newsletter!'
+                message: 'Genial! Te has suscrito a nuestro newsletter. Te mantendremos al tanto de nuestras novedades.'
             };
 
         } catch (err) {
-            console.error('Error inesperado al suscribir newsletter:', err);
+            console.error('Error inesperado:', err);
             return {
                 success: false,
-                error: 'Error de conexión'
+                error: 'Error de conexión: ' + (err.message || 'Error desconocido')
             };
         }
     }
 
-    /**
-     * Validar formato de email
-     * @param {string} email - Email a validar
-     */
     validarEmail(email) {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regex.test(email);
     }
 
-    /**
-     * Validar formato de teléfono (argentina)
-     * @param {string} telefono - Teléfono a validar
-     */
     validarTelefono(telefono) {
-        // Acepta formatos como: +54911234567, 01134567890, 1134567890
         const regex = /^(\+54)?(\s?)(9)?([\s\-]?)([0-9]{2,4})[\s\-]?([0-9]{6,8})$/;
         return regex.test(telefono);
     }
 
-    /**
-     * Mostrar mensaje de éxito o error en la UI
-     * @param {string} mensaje - Mensaje a mostrar
-     * @param {string} tipo - 'success' o 'error'
-     * @param {string} containerId - ID del contenedor donde mostrar el mensaje
-     */
     mostrarMensaje(mensaje, tipo = 'success', containerId = 'mensaje-resultado') {
         const container = document.getElementById(containerId);
         if (!container) {
@@ -154,76 +145,113 @@ class LeadsService {
             return;
         }
 
+        const icon = tipo === 'success' ? 
+            '<i class="fas fa-check-circle"></i>' : 
+            '<i class="fas fa-exclamation-circle"></i>';
+
         container.innerHTML = `
             <div class="mensaje ${tipo}" style="
-                padding: 15px;
-                border-radius: 5px;
-                margin: 10px 0;
-                background-color: ${tipo === 'success' ? '#d4edda' : '#f8d7da'};
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 16px 20px;
+                border-radius: 8px;
+                margin: 15px 0;
+                background-color: ${tipo === 'success' ? '#f0f9f4' : '#fef1f2'};
                 border: 1px solid ${tipo === 'success' ? '#c3e6cb' : '#f5c6cb'};
-                color: ${tipo === 'success' ? '#155724' : '#721c24'};
+                color: ${tipo === 'success' ? '#0f5132' : '#842029'};
+                font-size: 15px;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                animation: slideIn 0.3s ease forwards;
             ">
-                ${mensaje}
+                ${icon}
+                <span style="flex: 1;">${mensaje}</span>
             </div>
         `;
 
+        // Agregar animaciones CSS si no existen
+        if (!document.querySelector('#mensaje-animacion')) {
+            const style = document.createElement('style');
+            style.id = 'mensaje-animacion';
+            style.textContent = `
+                @keyframes slideIn {
+                    from { opacity: 0; transform: translateY(-10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes slideOut {
+                    from { opacity: 1; transform: translateY(0); }
+                    to { opacity: 0; transform: translateY(-10px); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
         // Auto-ocultar después de 5 segundos
         setTimeout(() => {
-            if (container.innerHTML.includes(mensaje)) {
-                container.innerHTML = '';
+            const mensajeElement = container.querySelector('.mensaje');
+            if (mensajeElement) {
+                mensajeElement.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => {
+                    if (container.contains(mensajeElement)) {
+                        container.innerHTML = '';
+                    }
+                }, 300);
             }
         }, 5000);
     }
 }
 
-// Instancia global del servicio
+// Variables globales
 let leadsService;
 
-// Inicializar el servicio cuando Supabase esté listo
+// Inicializar servicio
 function initLeadsService() {
     if (typeof getSupabaseClient === 'function') {
         leadsService = new LeadsService();
-        console.log('✅ LeadsService inicializado');
+        window.leadsService = leadsService; // También asignar a window para mayor compatibilidad
+        console.log('✅ LeadsService inicializado y disponible globalmente');
         return true;
     }
     return false;
 }
 
-// Intentar inicializar cuando el DOM esté listo
+// Auto-inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
-    // Intentar varias veces hasta que Supabase esté listo
     let attempts = 0;
-    const maxAttempts = 10;
+    const maxAttempts = 15;
     
     const tryInit = () => {
         attempts++;
+        console.log(`Intento ${attempts}/${maxAttempts} de inicializar LeadsService`);
+        
         if (initLeadsService()) {
-            return; // Éxito, salir
+            return;
         }
         
         if (attempts < maxAttempts) {
-            setTimeout(tryInit, 200);
+            setTimeout(tryInit, 300);
         } else {
             console.error('No se pudo inicializar LeadsService después de', maxAttempts, 'intentos');
         }
     };
     
-    // Empezar a intentar después de un pequeño delay
-    setTimeout(tryInit, 350);
+    setTimeout(tryInit, 500);
 });
 
-/**
- * Funciones globales para manejar formularios
- */
-
-// Manejar formulario de consulta general
+// Función global para manejar formulario de consulta
 async function enviarFormularioConsulta(event) {
     event.preventDefault();
     
     const form = event.target;
     const formData = new FormData(form);
     
-    // Mostrar loading
+    if (!leadsService) {
+        console.error('LeadsService no disponible');
+        alert('Error: El servicio no está disponible. Por favor, recarga la página.');
+        return;
+    }
+    
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     submitBtn.textContent = 'Enviando...';
@@ -239,7 +267,6 @@ async function enviarFormularioConsulta(event) {
         origen: 'formulario_contacto'
     };
 
-    // Validaciones básicas
     if (!leadsService.validarEmail(consultaData.email)) {
         leadsService.mostrarMensaje('Por favor, ingresa un email válido', 'error');
         submitBtn.textContent = originalText;
@@ -254,42 +281,15 @@ async function enviarFormularioConsulta(event) {
         return;
     }
 
-    // Enviar consulta
     const resultado = await leadsService.enviarConsulta(consultaData);
     
     if (resultado.success) {
         leadsService.mostrarMensaje(resultado.message, 'success');
-        form.reset(); // Limpiar formulario
+        form.reset();
     } else {
         leadsService.mostrarMensaje(resultado.error, 'error');
     }
 
-    // Restaurar botón
     submitBtn.textContent = originalText;
     submitBtn.disabled = false;
-}
-
-// Manejar suscripción a newsletter
-async function suscribirNewsletter(event) {
-    event.preventDefault();
-    
-    const form = event.target;
-    const formData = new FormData(form);
-    
-    const email = formData.get('email');
-    const nombre = formData.get('nombre');
-
-    if (!leadsService.validarEmail(email)) {
-        leadsService.mostrarMensaje('Por favor, ingresa un email válido', 'error', 'newsletter-mensaje');
-        return;
-    }
-
-    const resultado = await leadsService.suscribirNewsletter(email, nombre);
-    
-    if (resultado.success) {
-        leadsService.mostrarMensaje(resultado.message, 'success', 'newsletter-mensaje');
-        form.reset();
-    } else {
-        leadsService.mostrarMensaje(resultado.error, 'error', 'newsletter-mensaje');
-    }
 }
