@@ -112,10 +112,10 @@ create table if not exists public.newsletter (
   id bigserial primary key,
   email text unique not null,
   nombre text,
-  activo boolean default true,
-  origen text default 'web',
+  apellido text,
   fecha_suscripcion timestamptz default now(),
-  fecha_baja timestamptz
+  fecha_baja timestamptz,
+  activo boolean default true
 );
 
 -- 11) Información general del sitio (footer/datos de contacto)

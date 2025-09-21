@@ -22,16 +22,16 @@
 
   <section class="products">
     <div class="container">
-      <!-- Loading spinner -->
-      <div id="products-loading" class="loading-spinner" style="text-align: center; padding: 40px;">
-        <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #007bff; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-        <p style="margin-top: 15px; color: #666;">Cargando productos...</p>
+      <!-- Loading bar -->
+      <div id="products-loading" class="loading-spinner">
+        <div class="loading-bar"></div>
+        <div class="loading-text">Cargando productos...</div>
       </div>
       
       <!-- Error message -->
-      <div id="products-error" class="error-message" style="display: none; text-align: center; padding: 40px;">
-        <p style="color: #dc3545;">Error al cargar los productos. Por favor, recarga la página.</p>
-        <button onclick="cargarProductosComodas()" style="margin-top: 15px; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Reintentar</button>
+      <div id="products-error" class="error-message" style="display: none;">
+        <p>Error al cargar los productos. Por favor, recarga la página.</p>
+        <button onclick="cargarProductosComodas()" class="retry-btn">Reintentar</button>
       </div>
 
       <!-- Products grid - Se llenará dinámicamente -->
@@ -95,16 +95,6 @@
 
 <!-- Script para cargar productos de cómodas dinámicamente -->
 <script>
-// Animación de loading
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-`;
-document.head.appendChild(style);
-
 // Función para cargar productos de cómodas
 async function cargarProductosComodas() {
   const loadingEl = document.getElementById('products-loading');

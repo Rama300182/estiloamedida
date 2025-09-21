@@ -12,8 +12,10 @@ if ($producto_id <= 0) {
 <main class="detalle-producto">
     <!-- Loading State -->
     <div id="loading-estado" class="loading-container">
-        <div class="loading-spinner"></div>
-        <p>Cargando detalles del producto...</p>
+        <div class="loading-spinner">
+            <div class="loading-bar"></div>
+            <div class="loading-text">Cargando detalles del producto...</div>
+        </div>
     </div>
 
     <!-- Error State -->
@@ -218,15 +220,7 @@ function mostrarProducto(producto) {
 function configurarGaleria(producto) {
     imagenesProducto = [];
     
-    // Imagen principal del producto
-    if (producto.imagen_url) {
-        imagenesProducto.push({
-            url: producto.imagen_url,
-            alt: producto.nombre
-        });
-    }
-    
-    // Imágenes adicionales
+    // Primero, añadir imágenes adicionales desde producto_fotos
     if (producto.producto_fotos && producto.producto_fotos.length > 0) {
         producto.producto_fotos
             .sort((a, b) => (a.orden || 0) - (b.orden || 0))
@@ -236,6 +230,26 @@ function configurarGaleria(producto) {
                     alt: foto.alt || producto.nombre
                 });
             });
+    }
+    
+    // Solo añadir imagen principal si no hay fotos adicionales o si no está ya incluida
+    if (producto.imagen_url) {
+        const yaExiste = imagenesProducto.some(img => img.url === producto.imagen_url);
+        if (!yaExiste) {
+            // Añadir al principio si no existe
+            imagenesProducto.unshift({
+                url: producto.imagen_url,
+                alt: producto.nombre
+            });
+        }
+    }
+    
+    // Si no hay imágenes en producto_fotos, usar la imagen principal
+    if (imagenesProducto.length === 0 && producto.imagen_url) {
+        imagenesProducto.push({
+            url: producto.imagen_url,
+            alt: producto.nombre
+        });
     }
     
     if (imagenesProducto.length > 0) {

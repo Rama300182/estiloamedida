@@ -131,102 +131,51 @@
     </div>
   </section>
 
-  <section id="contacto" class="contact">
-    <div class="container">
-      <div class="section-title">
-        <h2>Contacta con <span>nosotros</span></h2>
-        <p>Cuéntanos sobre tu proyecto y te ayudaremos a hacerlo realidad</p>
-      </div>
-      
-      <!-- Mensaje de resultado -->
-      <div id="mensaje-resultado"></div>
-      
-      <div class="contact-form">
-        <form onsubmit="enviarFormularioConsulta(event)" id="formulario-contacto">
-          <div class="form-group">
-            <input type="text" 
-                   name="nombre" 
-                   class="form-control" 
-                   placeholder="Nombre completo" 
-                   required
-                   minlength="2">
+  <!-- Newsletter -->
+      <section class="newsletter-section">
+        <div class="newsletter-container">
+          <div class="newsletter-content">
+            <h3 class="newsletter-title">Suscríbete a Nuestro Newsletter</h3>
+            <p class="newsletter-description">
+              Recibí información exclusiva sobre nuestros productos, lanzamientos & descuentos.
+            </p>
+            
+            <div id="newsletter-mensaje" class="newsletter-mensaje"></div>
+            
+            <form id="newsletter-form" class="newsletter-form">
+              <div class="newsletter-inputs">
+                <div class="input-group">
+                  <input type="text" 
+                         id="newsletter-nombre" 
+                         name="nombre" 
+                         placeholder="Nombre" 
+                         required 
+                         class="newsletter-input">
+                </div>
+                <div class="input-group">
+                  <input type="text" 
+                         id="newsletter-apellido" 
+                         name="apellido" 
+                         placeholder="Apellido" 
+                         required 
+                         class="newsletter-input">
+                </div>
+                <div class="input-group newsletter-email-group">
+                  <input type="email" 
+                         id="newsletter-email" 
+                         name="email" 
+                         placeholder="Email" 
+                         required 
+                         class="newsletter-input newsletter-email">
+                  <button type="submit" class="newsletter-submit">
+                    <span class="submit-text">→</span>
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
-          
-          <div class="form-group">
-            <input type="email" 
-                   name="email" 
-                   class="form-control" 
-                   placeholder="Correo electrónico" 
-                   required>
-          </div>
-          
-          <div class="form-group">
-            <input type="tel" 
-                   name="telefono" 
-                   class="form-control" 
-                   placeholder="Teléfono (opcional)"
-                   pattern="[\+]?[0-9\s\-\(\)]+"
-                   title="Ingresa un número de teléfono válido">
-          </div>
-          
-          <div class="form-group">
-            <select name="producto_interes" class="form-control">
-              <option value="">¿Qué tipo de mueble te interesa?</option>
-              <option value="cocinas">Cocinas a medida</option>
-              <option value="comodas">Cómodas</option>
-              <option value="placards">Placards y vestidores</option>
-              <option value="otros">Otros muebles</option>
-            </select>
-          </div>
-          
-          <div class="form-group">
-            <select name="presupuesto_estimado" class="form-control">
-              <option value="">Presupuesto estimado (opcional)</option>
-              <option value="hasta_50000">Hasta $50.000</option>
-              <option value="50000_100000">$50.000 - $100.000</option>
-              <option value="100000_200000">$100.000 - $200.000</option>
-              <option value="mas_200000">Más de $200.000</option>
-            </select>
-          </div>
-          
-          <div class="form-group">
-            <textarea name="mensaje" 
-                      class="form-control" 
-                      placeholder="Cuéntanos sobre tu proyecto: medidas, estilo preferido, fechas, etc."
-                      required
-                      minlength="10"
-                      rows="5"></textarea>
-          </div>
-          
-          <button type="submit" class="btn">Enviar consulta</button>
-          
-          <p class="form-disclaimer" style="font-size: 0.9em; color: #666; margin-top: 15px; text-align: center;">
-            Al enviar este formulario, aceptas que contactemos contigo para brindarte información sobre nuestros servicios.
-          </p>
-        </form>
-      </div>
-
-      <!-- Newsletter opcional -->
-      <div class="newsletter-section" style="margin-top: 50px; text-align: center; padding: 30px; background: #f8f9fa; border-radius: 10px;">
-        <h3>¿Te gustaría recibir ideas de diseño?</h3>
-        <p>Suscríbete a nuestro newsletter y recibe inspiración para tu hogar</p>
-        
-        <div id="newsletter-mensaje"></div>
-        
-        <form onsubmit="suscribirNewsletter(event)" style="max-width: 400px; margin: 20px auto;">
-          <div style="display: flex; gap: 10px;">
-            <input type="email" 
-                   name="email" 
-                   placeholder="Tu email" 
-                   required 
-                   style="flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 5px;">
-            <button type="submit" 
-                    style="padding: 12px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-              Suscribirse
-            </button>
-          </div>
-        </form>
-      </div>
+        </div>
+      </section>
     </div>
   </section>
 
