@@ -1,11 +1,10 @@
-
 <!-- Incluir header desde header.html -->
 <?php include 'header.html'; ?>
 
   <section class="category-header">
     <div class="container">
-      <h1>Cómodas <span>a Medida</span></h1>
-      <p>Piezas funcionales que combinan elegancia y practicidad para organizar tus espacios con estilo</p>
+      <h1>Placards <span>a Medida</span></h1>
+      <p>Soluciones de almacenamiento inteligente que maximizan el espacio y se adaptan perfectamente a tus necesidades</p>
     </div>
   </section>
 
@@ -15,7 +14,7 @@
         <button class="filter-btn active" data-filter="all">Todos</button>
         <button class="filter-btn" data-filter="modernos">Modernos</button>
         <button class="filter-btn" data-filter="clasicos">Clásicos</button>
-        <button class="filter-btn" data-filter="nordicos">Nórdicos</button>
+        <button class="filter-btn" data-filter="minimalista">Minimalista</button>
       </div>
     </div>
   </section>
@@ -31,7 +30,7 @@
       <!-- Error message -->
       <div id="products-error" class="error-message" style="display: none;">
         <p>Error al cargar los productos. Por favor, recarga la página.</p>
-        <button onclick="cargarProductosComodas()" class="retry-btn">Reintentar</button>
+        <button onclick="cargarProductosPlacards()" class="retry-btn">Reintentar</button>
       </div>
 
       <!-- Products grid - Se llenará dinámicamente -->
@@ -48,108 +47,92 @@
         <div class="modal-content">
           <div class="modal-gallery">
             <div class="gallery-main">
-              <img id="main-image" src="" alt="Producto">
+              <img id="modal-main-image" src="" alt="">
             </div>
-            <div class="gallery-thumbs">
-              <!-- Thumbnails will be loaded dynamically -->
+            <div class="gallery-thumbnails">
+              <!-- Las miniaturas se generarán dinámicamente -->
             </div>
           </div>
           <div class="modal-info">
-            <h2 id="product-title"></h2>
-            <div class="product-description">
-              <p id="product-description"></p>
-            </div>
-            <div class="product-features">
-              <h3>Características</h3>
-              <ul id="product-features">
-                <!-- Features will be loaded dynamically -->
+            <h2 id="modal-product-name"></h2>
+            <p id="modal-product-description"></p>
+            <div class="product-specs">
+              <h3>Especificaciones:</h3>
+              <ul id="modal-product-specs">
+                <!-- Las especificaciones se generarán dinámicamente -->
               </ul>
             </div>
-            <div class="product-materials">
-              <h3>Colores disponibles</h3>
-              <div class="materials-list" id="product-materials">
-                <!-- Materials will be loaded dynamically -->
-              </div>
+            <div class="product-price">
+              <span id="modal-product-price"></span>
             </div>
-            <div class="product-actions">
-              <a href="#" class="btn btn-primary">Solicitar cotización</a>
-            </div>
+            <button class="contact-btn">Consultar</button>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="cta-section">
-    <div class="container">
-      <div class="cta-content">
-        <h2>¿Buscas una <span>cómoda personalizada</span>?</h2>
-        <p>Diseñamos muebles que se adaptan perfectamente a tus necesidades y espacio</p>
-        <a href="index.html#contacto" class="btn">Contáctanos</a>
-      </div>
-    </div>
-  </section>
-
- <!-- Incluir footer desde footer.html -->
+<!-- Incluir footer desde footer.html -->
 <?php include 'footer.html'; ?>
 
-<!-- Script para cargar productos de cómodas dinámicamente -->
 <script>
-// Función para cargar productos de cómodas
-async function cargarProductosComodas() {
+// Función para cargar productos de placards desde Supabase
+async function cargarProductosPlacards() {
   const loadingEl = document.getElementById('products-loading');
   const errorEl = document.getElementById('products-error');
   const gridEl = document.getElementById('products-grid');
-
-  // Mostrar loading, ocultar error y grid
-  loadingEl.style.display = 'block';
-  errorEl.style.display = 'none';
-  gridEl.style.display = 'none';
-
+  
   try {
-    console.log('Cargando productos de cómodas...');
+    console.log('Iniciando carga de productos de placards...');
+    
+    // Mostrar loading, ocultar error y grid
+    loadingEl.style.display = 'block';
+    errorEl.style.display = 'none';
+    gridEl.style.display = 'none';
     
     // Intentar obtener por categoría primero
-    let resultado = await productsService.getProductosByCategoria('comodas');
-    console.log('Resultado productos cómodas:', resultado);
+    let resultado = await productsService.getProductosByCategoria('placares');
+    console.log('Resultado de productos de placards:', resultado);
     
     // Si no funciona por categoría, filtrar por nombre (temporal)
     if (!resultado.success || resultado.data.length === 0) {
-      console.log('Fallback: filtrando todos los productos por nombre que contenga "cómoda"');
+      console.log('Fallback: filtrando todos los productos por nombre que contenga "placard"');
       const todosProductos = await productsService.getAllProductos();
       
       if (todosProductos.success) {
         resultado = {
           success: true,
           data: todosProductos.data.filter(producto => 
-            producto.nombre.toLowerCase().includes('cómoda') ||
-            producto.nombre.toLowerCase().includes('comoda')
+            producto.nombre.toLowerCase().includes('placard') ||
+            producto.nombre.toLowerCase().includes('vestidor') ||
+            producto.nombre.toLowerCase().includes('ropero')
           )
         };
       }
     }
     
-    if (resultado.success && resultado.data.length > 0) {
-      // Generar HTML para todos los productos
+    if (resultado.success && resultado.data && resultado.data.length > 0) {
+      // Ocultar loading y mostrar grid
+      loadingEl.style.display = 'none';
+      gridEl.style.display = 'grid';
+      
+      // Limpiar grid
+      gridEl.innerHTML = '';
+      
+      // Generar HTML para cada producto usando el método del servicio
       const productosHTML = resultado.data.map(producto => 
         productsService.generarTarjetaProducto(producto)
       ).join('');
       
       gridEl.innerHTML = productosHTML;
       
-      // Ocultar loading, mostrar grid
+    } else if (resultado.success && (!resultado.data || resultado.data.length === 0)) {
+      // No hay productos en esta categoría
       loadingEl.style.display = 'none';
       gridEl.style.display = 'grid';
-      
-      console.log(`✅ Cargados ${resultado.data.length} productos de cómodas`);
-      
-      // Reinicializar filtros si existe la función
-      if (typeof initializeFilters === 'function') {
-        initializeFilters();
-      }
-      
+      gridEl.innerHTML = '<div style="text-align: center; padding: 40px; color: #666; grid-column: 1 / -1;"><h3>Próximamente</h3><p>Estamos preparando increíbles diseños de placards para ti.</p></div>';
     } else {
-      throw new Error('No se encontraron productos de cómodas');
+      throw new Error(resultado.error || 'No se encontraron productos de placards');
     }
     
   } catch (error) {
@@ -166,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Esperar a que los servicios estén listos
   setTimeout(() => {
     if (typeof productsService !== 'undefined' && productsService) {
-      cargarProductosComodas();
+      cargarProductosPlacards();
     } else {
       console.error('ProductsService no está disponible');
       document.getElementById('products-loading').style.display = 'none';

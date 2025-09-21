@@ -36,6 +36,19 @@ class ProductsService {
      */
     async getProductosByCategoria(categoriaSlug) {
         try {
+            // Primero obtener el ID de la categoría
+            const { data: categoria, error: categoriaError } = await this.supabase
+                .from('categorias')
+                .select('id')
+                .eq('slug', categoriaSlug)
+                .single();
+
+            if (categoriaError || !categoria) {
+                console.error('Error al obtener categoría:', categoriaError);
+                return { success: false, error: 'Categoría no encontrada', data: [] };
+            }
+
+            // Luego obtener los productos de esa categoría
             const { data, error } = await this.supabase
                 .from('productos')
                 .select(`
@@ -46,7 +59,7 @@ class ProductsService {
                         slug
                     )
                 `)
-                .eq('categorias.slug', categoriaSlug)
+                .eq('categoria_id', categoria.id)
                 .order('destacado', { ascending: false })
                 .order('nombre', { ascending: true });
 
@@ -218,7 +231,23 @@ class ProductsService {
         const categoriaClass = producto.categorias?.slug || 'general';
         // Usar imagen por defecto si no hay imagen_url
         const imagenUrl = producto.imagen_url || 'image/logo.png';
-        const precio = producto.precio_desde ? `Desde $${Number(producto.precio_desde).toLocaleString()}` : 'Consultar precio';
+        
+        // Formatear precio sin "Desde" y con el estilo de detalle-producto
+        let precioHTML = '';
+        if (producto.precio_desde) {
+            const precioFormateado = Number(producto.precio_desde).toLocaleString();
+            precioHTML = `
+                <div class="precio-container">
+                    <div class="precio-valor">$${precioFormateado}</div>
+                </div>
+            `;
+        } else {
+            precioHTML = `
+                <div class="precio-container">
+                    <div class="precio-valor">Consultar</div>
+                </div>
+            `;
+        }
 
         return `
             <div class="product-card" data-category="${categoriaClass}">
@@ -231,7 +260,7 @@ class ProductsService {
                 <div class="product-info">
                     <h3>${producto.nombre}</h3>
                     <p>${producto.descripcion_corta || ''}</p>
-                    ${producto.precio_desde ? `<div class="product-price">${precio}</div>` : ''}
+                    ${precioHTML}
                 </div>
             </div>
         `;

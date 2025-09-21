@@ -682,3 +682,18 @@
       font-size: 1.5rem;
     }
   }
+
+  /* ===== PRECIO ESTILO DETALLE-PRODUCTO ===== */
+  .precio-container {
+    margin-top: 10px;
+    text-align: left;
+  }
+  
+  .precio-valor {
+    font-style: normal;
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    color: var(--primary-color);
+  }

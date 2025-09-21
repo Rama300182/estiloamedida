@@ -32,11 +32,13 @@
           </div>
         </div>
         <div class="category-card">
-          <img src="image/vestidores/Vestidor Alpha.jpg" alt="Placards y vestidores">
-          <div class="category-overlay">
-            <h3>Placards</h3>
-            <p>Organización y estilo para tus espacios personales</p>
-          </div>
+          <a href="placards.php">
+            <img src="image/vestidores/Vestidor Alpha.jpg" alt="Placards y vestidores">
+            <div class="category-overlay">
+              <h3>Placards</h3>
+              <p>Organización y estilo para tus espacios personales</p>
+            </div>
+          </a>
         </div>
         <div class="category-card">
             <a href="comodas.php">
