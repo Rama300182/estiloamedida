@@ -7,18 +7,18 @@ function generarMensajeWhatsApp() {
     let mensaje = "¡Hola! Me interesa conocer más sobre los muebles de Estilo a Medida";
     
     // Si estamos en una página de producto específico
-    if (url.includes('detalle-producto.php')) {
+    if (url.includes('detalle-producto.html')) {
         const nombreProducto = document.querySelector('#producto-nombre');
         if (nombreProducto && nombreProducto.textContent.trim()) {
             mensaje = `¡Hola! Me interesa el producto "${nombreProducto.textContent.trim()}" que vi en su sitio web.`;
         }
     }
     // Si estamos en la página de cómodas
-    else if (url.includes('comodas.php')) {
+    else if (url.includes('comodas.html')) {
         mensaje = "¡Hola! Me interesan las cómodas que vi en su catálogo. Me gustaría conocer más detalles.";
     }
     // Si estamos en la página principal
-    else if (url.includes('index.php') || url.endsWith('/')) {
+    else if (url.includes('index.html') || url.endsWith('/')) {
         mensaje = "¡Hola! Vi su sitio web de Estilo a Medida y me interesa conocer más sobre sus muebles a medida.";
     }
     

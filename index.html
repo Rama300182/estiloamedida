@@ -1,6 +1,53 @@
 
-<!-- Incluir header desde header.html -->
-<?php include 'header.html'; ?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estilo a Medida | Tu hogar, tu estilo</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/comodas.css">
+  <link rel="stylesheet" href="css/placards.css">
+  <link rel="stylesheet" href="css/racks.css">
+  <link rel="stylesheet" href="css/detalle-producto.css">
+  <link rel="stylesheet" href="css/whatsapp-float.css">
+  <link rel="stylesheet" href="css/newsletter.css">
+  <link rel="icon" type="image/png" href="image/logo.png">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Supabase JS (usando jsdelivr por ser más confiable que unpkg) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
+  
+  <!-- Scripts de la aplicación en orden -->
+  <script src="config/supabase.js" defer></script>
+  <script src="js/products.service.js" defer></script>
+  <script src="js/leads.service.js" defer></script>
+  <script src="js/newsletter.js" defer></script>
+  <script src="js/placards.js" defer></script>
+  <script src="js/racks.js" defer></script>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <div class="logo">
+          <a href="index.html">
+            <img src="image/logo.png" alt="Estilo a Medida Logo">
+          </a>
+        </div>
+        <div class="nav-links">
+          <a href="index.html#inicio">Inicio</a>
+          <a href="index.html#categorias">Categorías</a>
+          <a href="index.html#proyectos">Proyectos</a>
+          <a href="contacto.html">Contacto</a>
+        </div>
+        <a href="https://www.instagram.com/estilo.a.medida" target="_blank" class="social-icon">
+          <i class="fab fa-instagram"></i>
+        </a>
+      </nav>
+    </div>
+  </header>
 
   <section id="inicio" class="hero">
     <div class="container">
@@ -32,7 +79,7 @@
           </div>
         </div>
         <div class="category-card">
-          <a href="placards.php">
+          <a href="placards.html">
             <img src="image/vestidores/Vestidor Alpha.jpg" alt="Placards y vestidores">
             <div class="category-overlay">
               <h3>Placards</h3>
@@ -41,14 +88,23 @@
           </a>
         </div>
         <div class="category-card">
-            <a href="comodas.php">
+            <a href="comodas.html">
               <img src="image/comodas/Cómoda Duo Blanco.jpg" alt="Cómodas y cajoneras">
               <div class="category-overlay">
                 <h3>Cómodas</h3>
                 <p>Elegancia y practicidad para tus espacios de relax</p>
               </div>
             </a>
-          </div>
+        </div>
+        <div class="category-card">
+          <a href="racks.html">
+            <img src="image/racks/Rack Oslo.jpg" alt="Racks de TV">
+            <div class="category-overlay">
+              <h3>Racks de TV</h3>
+              <p>Centros de entretenimiento modernos para tu hogar</p>
+            </div>
+          </a>
+        </div>
       </div>
     </div>
   </section>
@@ -181,5 +237,58 @@
     </div>
   </section>
 
-<!-- Incluir footer desde footer.html -->
-<?php include 'footer.html'; ?>
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-col">
+          <h4>Estilo a Medida</h4>
+          <p>Tu hogar, tu estilo. Creamos muebles a la medida de tus sueños, combinando diseño, funcionalidad y estética.</p>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/estilo.a.medida" target="_blank" class="social-icon">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="social-icon">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social-icon">
+              <i class="fab fa-pinterest"></i>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Enlaces rápidos</h4>
+          <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="index.html#categorias">Categorías</a></li>
+            <li><a href="index.html#nosotros">Nosotros</a></li>
+            <li><a href="index.html#proyectos">Proyectos</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contáctanos</h4>
+          <ul>
+            <li><i class="fas fa-map-marker-alt"></i> Av. Ejemplo 1234, Santiago</li>
+            <li><i class="fas fa-phone"></i> 11-7393-1253</li>
+            <li><i class="fas fa-envelope"></i> estiloamedidaideas@gmail.com</li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>&copy; 2025 Estilo a Medida. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Botón flotante de WhatsApp -->
+  <a href="https://wa.me/5491173931253?text=¡Hola! Me interesa conocer más sobre los muebles de Estilo a Medida" 
+     class="whatsapp-float" 
+     target="_blank"
+     aria-label="Contactar por WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <script src="js/comoda.js"></script>
+  <script src="js/whatsapp.js"></script>
+</body>
+</html>

@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Función global para ver detalles del producto
 function verDetalleProducto(id) {
     if (id && id > 0) {
-        window.location.href = `detalle-producto.php?id=${id}`;
+        window.location.href = `detalle-producto.html?id=${id}`;
     } else {
         console.error('ID de producto inválido:', id);
     }
