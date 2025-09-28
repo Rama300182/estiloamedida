@@ -29,7 +29,17 @@
     padding: 0 var(--spacing-unit);
   }
   
-  header {
+      .hero-text h1 {
+      font-size: 1.5rem;
+    }
+    
+    .carousel-container {
+      margin: 0 -1rem;
+    }
+    
+    .carousel-item img {
+      height: 250px;
+    }der {
     position: fixed;
     width: 100%;
     top: 0;
@@ -182,8 +192,9 @@
   
   .hero-image img {
     width: 100%;
-    height: 500px;
+    height: 450px;
     object-fit: cover;
+    border-radius: 8px;
   }
   
   .categories {
@@ -283,33 +294,127 @@
     font-size: 1.5rem;
   }
   
+  /* Animaciones de entrada */
+  .fade-in-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    animation: fadeInLeft 1s ease forwards;
+  }
+  
+  .fade-in-right {
+    opacity: 0;
+    transform: translateX(50px);
+    animation: fadeInRight 1s ease forwards 0.3s;
+  }
+  
+  .animate-card {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  .animate-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  @keyframes fadeInLeft {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes fadeInRight {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
   .gallery {
     padding: 5rem 0;
     background-color: white;
   }
   
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-  }
-  
-  .gallery-item {
+  /* Carrusel de proyectos */
+  .carousel-container {
     position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .carousel-wrapper {
     overflow: hidden;
-    border-radius: 8px;
-    height: 250px;
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   }
   
-  .gallery-item img {
+  .carousel-track {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  .carousel-item {
+    min-width: 100%;
+    position: relative;
+    height: auto;
+  }
+  
+  .carousel-item img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s;
+    height: 500px;
+    object-fit: contain;
+    border-radius: 8px;
+    background-color: #f8f8f8;
   }
   
-  .gallery-item:hover img {
-    transform: scale(1.05);
+  .carousel-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    color: white;
+    padding: 2rem;
+    transform: translateY(100%);
+    transition: transform 0.4s ease;
+  }
+  
+  .carousel-item.active .carousel-content {
+    transform: translateY(0);
+  }
+  
+  .carousel-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .carousel-content p {
+    font-size: 1rem;
+    opacity: 0.9;
+  }
+  
+  .carousel-dots {
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+  
+  .dot {
+    height: 12px;
+    width: 12px;
+    margin: 0 5px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .dot.active,
+  .dot:hover {
+    background-color: var(--primary-color);
+    transform: scale(1.2);
   }
   
   .testimonials {
@@ -530,7 +635,24 @@
     }
     
     .hero-image img {
-      height: 300px;
+      height: 320px;
+    }
+    
+    /* Responsive carrusel */
+    .carousel-item img {
+      height: 400px;
+    }
+    
+    .carousel-content {
+      padding: 1rem;
+    }
+    
+    .carousel-content h3 {
+      font-size: 1.2rem;
+    }
+    
+    .carousel-content p {
+      font-size: 0.9rem;
     }
     
     /* Secciones responsive */
@@ -578,12 +700,25 @@
       font-size: 1.8rem;
     }
     
+    .carousel-item img {
+      height: 300px;
+    }
+    
+    .carousel-content h3 {
+      font-size: 1rem;
+    }
+    
+    .carousel-content p {
+      font-size: 0.8rem;
+    }
+    
     .container {
       padding: 0 1rem;
     }
     
     .category-card {
-      height: 200px;
+      height: auto;
+      min-height: 200px;
     }
     
     .btn {
