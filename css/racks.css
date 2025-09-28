@@ -224,21 +224,21 @@
   
   .product-image {
     position: relative;
-    height: 250px;
+    height: 300px;
     overflow: hidden;
   }
-  
+
   .product-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: var(--transition);
   }
-  
+
   .product-card:hover .product-image img {
     transform: scale(1.05);
   }
-  
+
   .product-overlay {
     position: absolute;
     top: 0;
@@ -257,11 +257,11 @@
     opacity: 0;
     transition: var(--transition);
   }
-  
+
   .product-card:hover .product-overlay {
     opacity: 1;
   }
-  
+
   .view-details,
   .btn-view {
     background-color: white;
@@ -277,38 +277,41 @@
     transition: var(--transition);
     transform: translateY(20px);
   }
-  
+
   .product-card:hover .view-details,
   .product-card:hover .btn-view {
     transform: translateY(0);
   }
-  
+
   .view-details:hover,
   .btn-view:hover {
     background-color: var(--rack-accent);
     color: white;
     transform: translateY(-2px);
   }
-  
+
   .product-info {
-    padding: 25px;
+    padding: 1rem;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
-  
+
   .product-info h3 {
-    font-size: 1.3rem;
-    margin-bottom: 10px;
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
     color: var(--secondary-color);
     font-weight: 600;
+    line-height: 1.3;
   }
-  
+
   .product-info p {
     color: var(--dark-color);
-    font-size: 0.95rem;
-    line-height: 1.5;
-    margin-bottom: 15px;
-  }
-  
-  .product-price {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+  }  .product-price {
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--rack-accent);

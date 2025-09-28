@@ -1,6 +1,24 @@
 document.addEventListener('DOMContentLoaded', function() {
     const contactForm = document.getElementById('contactForm');
 
+    // Verificar si hay un producto en los parámetros de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const producto = urlParams.get('producto');
+    
+    if (producto) {
+        // Si hay un producto, prellenar el campo de mensaje
+        const mensajeField = document.getElementById('mensaje');
+        if (mensajeField) {
+            mensajeField.value = `Hola, estoy interesado/a en obtener más información sobre: ${decodeURIComponent(producto)}. ¿Podrían enviarme detalles sobre precio, medidas y tiempos de entrega? Gracias.`;
+        }
+        
+        // También actualizar el título de la página si es posible
+        const pageTitle = document.querySelector('h1');
+        if (pageTitle && pageTitle.textContent.includes('Contacto')) {
+            pageTitle.innerHTML = `Contacto <span style="color: var(--primary-color);">- ${decodeURIComponent(producto)}</span>`;
+        }
+    }
+
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();

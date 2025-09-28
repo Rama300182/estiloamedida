@@ -36,7 +36,7 @@
             <img src="image/logo.png" alt="Estilo a Medida Logo">
           </a>
         </div>
-        <div class="nav-links">
+        <div class="nav-links" id="navLinks">
           <a href="index.html#inicio">Inicio</a>
           <a href="index.html#categorias">Categorías</a>
           <a href="index.html#proyectos">Proyectos</a>
@@ -45,6 +45,11 @@
         <a href="https://www.instagram.com/estilo.a.medida" target="_blank" class="social-icon">
           <i class="fab fa-instagram"></i>
         </a>
+        <div class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </nav>
     </div>
   </header>
@@ -53,17 +58,6 @@
     <div class="container">
       <h1>Cómodas <span>a Medida</span></h1>
       <p>Piezas funcionales que combinan elegancia y practicidad para organizar tus espacios con estilo</p>
-    </div>
-  </section>
-
-  <section class="filter-section">
-    <div class="container">
-      <div class="filters">
-        <button class="filter-btn active" data-filter="all">Todos</button>
-        <button class="filter-btn" data-filter="modernos">Modernos</button>
-        <button class="filter-btn" data-filter="clasicos">Clásicos</button>
-        <button class="filter-btn" data-filter="nordicos">Nórdicos</button>
-      </div>
     </div>
   </section>
 
@@ -132,7 +126,7 @@
       <div class="cta-content">
         <h2>¿Buscas una <span>cómoda personalizada</span>?</h2>
         <p>Diseñamos muebles que se adaptan perfectamente a tus necesidades y espacio</p>
-        <a href="index.html#contacto" class="btn">Contáctanos</a>
+        <a href="contacto.html" class="btn">Contáctanos</a>
       </div>
     </div>
   </section>
@@ -197,6 +191,7 @@
     <i class="fab fa-whatsapp"></i>
   </a>
   
+  <script src="js/mobile-menu.js"></script>
   <script src="js/comoda.js"></script>
   <script src="js/whatsapp.js"></script>
 
